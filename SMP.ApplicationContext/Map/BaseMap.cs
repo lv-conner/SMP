@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SMP.ApplicationContext.Map
 {
-    public class BaseMap//:IEntityTypeConfiguration<EntityBase>
+    public abstract class BaseMap//:IEntityTypeConfiguration<EntityBase>
     {
         
     }

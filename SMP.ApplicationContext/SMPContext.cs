@@ -5,6 +5,8 @@ using Microsoft.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using SMP.ApplicationContext.Map;
+using System.Reflection;
+using System.Linq;
 
 namespace SMP.ApplicationContext
 {
@@ -16,7 +18,12 @@ namespace SMP.ApplicationContext
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new RegisterMap());
+            var mapTypes = Assembly.GetExecutingAssembly().ExportedTypes.Where(p => p.Name.EndsWith("Map") && !p.IsAbstract);
+            foreach (var item in mapTypes)
+            {
+                dynamic obj = Activator.CreateInstance(item);
+                modelBuilder.ApplyConfiguration(obj);
+            }
             base.OnModelCreating(modelBuilder);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
